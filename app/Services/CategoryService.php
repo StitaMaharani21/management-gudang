@@ -36,7 +36,7 @@ class CategoryService
 
     public function update(array $data, $id)
     {
-        $fields = ['id'];
+        $fields = ['*'];
         $category = $this->categoryRepository->getById($id, $fields);
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
             if(!empty($category->photo)){
@@ -49,7 +49,7 @@ class CategoryService
 
     public function delete($id)
     {
-        $fields = ['id', 'photo'];
+        $fields = ['*'];
 
         $category = $this->categoryRepository->getById($id, $fields);
 

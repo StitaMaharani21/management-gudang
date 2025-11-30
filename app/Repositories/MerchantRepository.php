@@ -34,5 +34,8 @@ class MerchantRepository
         $merchant->delete();
     }
 
-    
+    public function getByKeeperId($keeperId, array $fields)
+    {
+        return Merchant::select($fields)->where('keeper_id', $keeperId)->with('products.category')->firstOrFail();
+    }
 }
