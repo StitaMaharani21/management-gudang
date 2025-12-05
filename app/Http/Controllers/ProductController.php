@@ -19,15 +19,15 @@ class ProductController extends Controller
 
     public function index()
     {
-        $fields = ['id', 'name', 'price', 'thumbnail', 'category_id'];
+        $fields = ['*'];
         $products = $this->productService->getAll($fields);
-        return response()->json($products);
+        return response()->json(ProductResource::collection($products));
     }
 
     public function show($id)
     {
         try {
-            $fields = ['id', 'name', 'description', 'price', 'thumbnail', 'category_id'];
+            $fields = ['*'];
             $product = $this->productService->getById($id, $fields);
             return response()->json(new ProductResource($product));
         } catch (ModelNotFoundException $e) {

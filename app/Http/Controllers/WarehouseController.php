@@ -19,7 +19,7 @@ class WarehouseController extends Controller
 
     public function index()
     {
-        $fields = ['id', 'name', 'photo'];
+        $fields = ['*'];
         $warehouses = $this->warehouseService->getAll($fields ?: ['*']);
 
         return response()->json(WarehouseResource::collection($warehouses));
@@ -28,7 +28,7 @@ class WarehouseController extends Controller
     public function show($id)
     {
         try {
-            $fields = ['id', 'name', 'photo', 'phone', 'address'];
+            $fields = ['*'];
             $warehouse = $this->warehouseService->getById($id, $fields);
             return response()->json(new WarehouseResource($warehouse));
 
