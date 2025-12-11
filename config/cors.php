@@ -19,7 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['http://localhost:5173', 'https://management-gudang-production.up.railway.app', 'https://monday-management-gudang-tyn5.vercel.app'],
+    'allowed_origins' => ['http://localhost:5173', 'https://management-gudang-production.up.railway.app', 'https://monday-management-gudang-4lrd.vercel.app'],
 
     'allowed_origins_patterns' => [],
 
