@@ -33,11 +33,12 @@ class AuthRepository
             return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
-        request()->session()->regenerate();
         $user = Auth::user();
+        $token = $user->createToken('auth_token')->plainTextToken;
 
         return response()->json([
             'message' => 'Login successful',
+            'token' => $token,
             'user' => new UserResource($user->load('roles')),
         ], 200);
     }
