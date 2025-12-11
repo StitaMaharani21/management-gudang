@@ -19,7 +19,7 @@ class AuthRepository
             'photo' => $data['photo'],
             'password' => $data['password'],
         ]);
-        return new UserResource($user);
+        // return new UserResource($user);
     }
 
     public function login(array $data)
@@ -30,13 +30,16 @@ class AuthRepository
         ];
 
         if (!Auth::attempt($credentials)) {
-            return null;
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
+        request()->session()->regenerate();
         $user = Auth::user();
-        $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $token;
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => new UserResource($user->load('roles')),
+        ], 200);
     }
 
     public function tokenLogin(array $data)
@@ -47,12 +50,16 @@ class AuthRepository
         ];
 
         if (!Auth::attempt($credentials)) {
-            return null;
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
 
         $user = Auth::user();
         $token = $user->createToken('auth_token')->plainTextToken;
 
-        return $token;
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => new UserResource($user->load('roles')),
+        ], 200);
     }
 }
