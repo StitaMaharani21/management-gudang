@@ -29,22 +29,39 @@ class AuthController extends Controller
     {
         $data = $request->validated();
         $token = $this->authService->login($data);
-        return response()->json(['message' => 'Login successful', 'token' => $token], 200);
-    }
+        
+        if (!$token) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
 
+        $user = Auth::user();
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => new UserResource($user->load('roles')),
+        ], 200);
+    }
 
     public function tokenLogin(LoginRequest $request)
     {
         $data = $request->validated();
         $token = $this->authService->tokenLogin($data);
-        return response()->json(['message' => 'Login successful', 'token' => $token], 200);
+        
+        if (!$token) {
+            return response()->json(['message' => 'Invalid credentials'], 401);
+        }
+
+        $user = Auth::user();
+        return response()->json([
+            'message' => 'Login successful',
+            'token' => $token,
+            'user' => new UserResource($user->load('roles')),
+        ], 200);
     }
 
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+        $request->user()->currentAccessToken()->delete();
         return response()->json(['message' => 'Logout successful'], 200);
     }
 

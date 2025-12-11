@@ -20,8 +20,8 @@ class TransactionController extends Controller
 
     public function getAll(){
         $fields = ['*'];
-        $trasactions = $this->transactionService->getAll($fields);
-        return response()->json(TransactionResource::collection($trasactions));
+        $transactions = $this->transactionService->getAll($fields);
+        return response()->json(TransactionResource::collection($transactions));
     }
 
     public function store(TransactionRequest $request){
