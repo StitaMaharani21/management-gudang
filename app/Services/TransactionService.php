@@ -63,7 +63,7 @@ class TransactionService
                     throw ValidationException::withMessages(['product_id' => 'Product with ID ' . $item['product_id'] . ' does not exist.']);
                 }
 
-                $price = $product->price();
+                $price = $product->price;
                 $productSubTotal = $price * $item['quantity'];
                 $subtotal += $productSubTotal;
 

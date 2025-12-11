@@ -10,12 +10,12 @@ class TransactionRepository
 {
     public function getAll(array $fields)
     {
-        return Transaction::select($fields)->with('transactionProducts.product', 'merchant.keeper')->latest()->paginate(10);
+        return Transaction::select($fields)->with('transactionProducts.product.category', 'merchant.keeper')->latest()->paginate(10);
     }
 
     public function getById(int $id, array $fields)
     {
-        return Transaction::select($fields)->with('transactionProducts.product', 'merchant.keeper')->findOrFail($id);
+        return Transaction::select($fields)->with('transactionProducts.product.category', 'merchant.keeper')->findOrFail($id);
     }
 
     public function create(array $data)
@@ -51,6 +51,6 @@ class TransactionRepository
     }
 
     public function getTrasactionByMerchant($merchantId){
-        return Transaction::where('merchant_id', $merchantId)->select(['*'])->with('merchant','transactionProducts.product')->latest()->paginate(10);
+        return Transaction::where('merchant_id', $merchantId)->select(['*'])->with('merchant','transactionProducts.product.category')->latest()->paginate(10);
     }
 }

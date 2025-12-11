@@ -18,13 +18,28 @@ class CategoryService
 
     public function getAll(array $fields)
     {
-        return $this->categoryRepository->getAll($fields);
+        $categories = $this->categoryRepository->getAll($fields);
+
+        return $categories->map(function ($item) {
+            if ($item->photo) {
+                $item->photo = asset('storage/' . $item->photo);
+            }
+            return $item;
+        });
     }
+
 
     public function getById($id, array $fields)
     {
-        return $this->categoryRepository->getById($id, $fields ?? ['*']);
+        $item = $this->categoryRepository->getById($id, $fields ?? ['*']);
+
+        if ($item && $item->photo) {
+            $item->photo = asset('storage/' . $item->photo);
+        }
+
+        return $item;
     }
+
 
     public function create(array $data)
     {
@@ -39,7 +54,7 @@ class CategoryService
         $fields = ['*'];
         $category = $this->categoryRepository->getById($id, $fields);
         if (isset($data['photo']) && $data['photo'] instanceof UploadedFile) {
-            if(!empty($category->photo)){
+            if (!empty($category->photo)) {
                 $this->deletePhoto($category->photo);
             }
             $data['photo'] = $this->uploadPhoto($data['photo']);
@@ -53,10 +68,10 @@ class CategoryService
 
         $category = $this->categoryRepository->getById($id, $fields);
 
-        if(!empty($category->photo)){
+        if (!empty($category->photo)) {
             $this->deletePhoto($category->photo);
         }
-        
+
         $this->categoryRepository->delete($id);
     }
 
@@ -67,7 +82,7 @@ class CategoryService
 
     private function deletePhoto($photoPath)
     {
-        $relativePath = 'categories/' . basename($photoPath); 
+        $relativePath = 'categories/' . basename($photoPath);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }

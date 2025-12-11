@@ -17,12 +17,25 @@ class UserService
 
     public function getAll($fields)
     {
-        return $this->userRepository->getAll($fields);
+        $users = $this->userRepository->getAll($fields);
+
+        return $users->map(function ($item) {
+            if ($item->photo) {
+                $item->photo = asset('storage/' . $item->photo);
+            }
+            return $item;
+        });
     }
 
     public function getById($id, $fields)
     {
-        return $this->userRepository->getById($id, $fields ?? ['*']);
+        $item = $this->userRepository->getById($id, $fields ?? ['*']);
+
+        if ($item && $item->photo) {
+            $item->photo = asset('storage/' . $item->photo);
+        }
+
+        return $item;
     }
 
     public function create(array $data)

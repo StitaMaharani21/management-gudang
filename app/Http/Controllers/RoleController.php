@@ -6,6 +6,7 @@ use App\Http\Requests\RoleRequest;
 use App\Http\Resources\RoleResource;
 use Illuminate\Http\Request;
 use App\Services\RoleService;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class RoleController extends Controller
 {
@@ -46,8 +47,11 @@ class RoleController extends Controller
 
     public function destroy($id)
     {
-        $this->roleService->delete($id);
-        return response()->json(['message' => 'Role deleted successfully'], 200);
+        try {
+            $this->roleService->delete($id);
+            return response()->json(['message' => 'Role deleted successfully'], 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['message' => 'Role not found'], 404);
+        }
     }
-
 }

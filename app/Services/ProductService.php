@@ -18,12 +18,27 @@ class ProductService
 
     public function getAll(array $fields)
     {
-        return $this->productRepository->getAll($fields);
+        $products = $this->productRepository->getAll($fields);
+
+        return $products->map(function ($item) {
+            if ($item) {
+                $item->thumbnail = asset('storage/' . $item->thumbnail);
+                $item->photo = asset('storage/' . $item->photo);
+            }
+            return $item;
+        });
     }
 
     public function getById($id, array $fields)
     {
-        return $this->productRepository->getById($id, $fields ?? ['*']);
+        $item = $this->productRepository->getById($id, $fields ?? ['*']);
+
+        if ($item) {
+            $item->thumbnail = asset('storage/' . $item->thumbnail);
+            $item->photo = asset('storage/' . $item->photo);
+        }
+
+        return $item;
     }
 
     public function create(array $data)
@@ -63,8 +78,6 @@ class ProductService
 
         return $this->productRepository->delete($id);
     }
-
-
 
 
     private function uploadThumbnail(UploadedFile $thumbnail)

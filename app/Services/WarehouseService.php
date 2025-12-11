@@ -17,12 +17,25 @@ class WarehouseService
 
     public function getAll(array $fields)
     {
-        return $this->warehouseRepository->getAll($fields);
+        $warehouses = $this->warehouseRepository->getAll($fields);
+
+        return $warehouses->map(function ($item) {
+            if ($item->photo) {
+                $item->photo = asset('storage/' . $item->photo);
+            }
+            return $item;
+        });
     }
 
     public function getById($id, array $fields)
     {
-        return $this->warehouseRepository->getById($id, $fields);
+        $item = $this->warehouseRepository->getById($id, $fields ?? ['*']);
+
+        if ($item && $item->photo) {
+            $item->photo = asset('storage/' . $item->photo);
+        }
+
+        return $item;
     }
 
     public function create(array $data)
@@ -79,6 +92,8 @@ class WarehouseService
         if (!empty($warehouse->photo)) {
             $this->deletePhoto($warehouse->photo);
         }
+
+        $this->warehouseRepository->delete($id);
     }
 
     private function uploadPhoto(UploadedFile $photo)

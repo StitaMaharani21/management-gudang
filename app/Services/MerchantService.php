@@ -20,12 +20,25 @@ class MerchantService
 
     public function getAll(array $fields)
     {
-        return $this->merchantRepository->getAll($fields);
+        $merchants = $this->merchantRepository->getAll($fields);
+
+        return $merchants->map(function ($item) {
+            if ($item->photo) {
+                $item->photo = asset('storage/' . $item->photo);
+            }
+            return $item;
+        });
     }
 
     public function getById($id, array $fields)
     {
-        return $this->merchantRepository->getById($id, $fields);
+        $item = $this->merchantRepository->getById($id, $fields ?? ['*']);
+
+        if ($item && $item->photo) {
+            $item->photo = asset('storage/' . $item->photo);
+        }
+
+        return $item;
     }
 
     public function create(array $data)

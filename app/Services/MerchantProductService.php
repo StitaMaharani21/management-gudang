@@ -33,8 +33,8 @@ class MerchantProductService
 
             $existingProduct = $this->merchantProductRepository->getMerchantAndProduct($data['merchant_id'], $data['product_id']);
 
-            if (!$existingProduct) {
-                throw ValidationException::withMessages(['product' => 'Product not found for the merchant.']);
+            if ($existingProduct) {
+                throw ValidationException::withMessages(['product' => 'Product already assigned to the merchant.']);
             }
 
             //kurangi stock di warehouse product
