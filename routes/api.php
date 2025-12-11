@@ -37,11 +37,6 @@ Route::middleware('auth:sanctum', 'role:manager')->group(function () {
     Route::delete('merchants/{merchant}/products/{product}', [\App\Http\Controllers\MerchantProductController::class, 'destroy']);
 
     Route::get('transactions', [\App\Http\Controllers\TransactionController::class, 'getAll']);
-    Route::post('transactions', [\App\Http\Controllers\TransactionController::class, 'store']);
-    Route::get('transactions/{transaction}', [\App\Http\Controllers\TransactionController::class, 'show']);
-    Route::get('my-merchant', [\App\Http\Controllers\MerchantController::class, 'getMyMerchantProfile']);
-    Route::get('my-merchant/transactions', [\App\Http\Controllers\TransactionController::class, 'getTransactionByMerchant']);
-
 });
 
 
