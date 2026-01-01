@@ -20,9 +20,7 @@ class UserService
         $users = $this->userRepository->getAll($fields);
 
         return $users->map(function ($item) {
-            if ($item->photo) {
-                $item->photo = asset('storage/' . $item->photo);
-            }
+            $item->photo = $this->normalizePhotoUrl($item->photo);
             return $item;
         });
     }
@@ -31,8 +29,8 @@ class UserService
     {
         $item = $this->userRepository->getById($id, $fields ?? ['*']);
 
-        if ($item && $item->photo) {
-            $item->photo = asset('storage/' . $item->photo);
+        if ($item) {
+            $item->photo = $this->normalizePhotoUrl($item->photo);
         }
 
         return $item;
@@ -88,11 +86,28 @@ class UserService
 
     private function deletePhoto($photoPath)
     {
-        $relativePath = 'categories/' . basename($photoPath); 
+        $relativePath = 'categories/' . basename($photoPath);
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }
     }
 
+    protected function normalizePhotoUrl($photo)
+    {
+        if (empty($photo)) {
+            return null;
+        }
 
+        // If already full URL (http / https), return as is
+        if (is_string($photo) && str_starts_with($photo, 'http')) {
+            return $photo;
+        }
+
+        // If stored path like "categories/xxx.jpg"
+        if (is_string($photo)) {
+            return config('app.url') . '/storage/' . ltrim($photo, '/');
+        }
+
+        return null;
+    }
 }

@@ -18,6 +18,11 @@ class Product extends Model
         'is_popular',
     ];
 
+    protected $casts = [
+        'price' => 'integer',
+        'is_popular' => 'boolean',
+    ];
+
     public function category()
     {
         return $this->belongsTo(Category::class);

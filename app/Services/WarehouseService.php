@@ -20,9 +20,7 @@ class WarehouseService
         $warehouses = $this->warehouseRepository->getAll($fields);
 
         return $warehouses->map(function ($item) {
-            if ($item->photo) {
-                $item->photo = asset('storage/' . $item->photo);
-            }
+            $item->photo = $this->normalizePhotoUrl($item->photo);
             return $item;
         });
     }
@@ -31,8 +29,8 @@ class WarehouseService
     {
         $item = $this->warehouseRepository->getById($id, $fields ?? ['*']);
 
-        if ($item && $item->photo) {
-            $item->photo = asset('storage/' . $item->photo);
+        if ($item) {
+            $item->photo = $this->normalizePhotoUrl($item->photo);
         }
 
         return $item;
@@ -107,5 +105,24 @@ class WarehouseService
         if (Storage::disk('public')->exists($relativePath)) {
             Storage::disk('public')->delete($relativePath);
         }
+    }
+
+    protected function normalizePhotoUrl($photo)
+    {
+        if (empty($photo)) {
+            return null;
+        }
+
+        // If already full URL (http / https), return as is
+        if (is_string($photo) && str_starts_with($photo, 'http')) {
+            return $photo;
+        }
+
+        // If stored path like "categories/xxx.jpg"
+        if (is_string($photo)) {
+            return config('app.url') . '/storage/' . ltrim($photo, '/');
+        }
+
+        return null;
     }
 }

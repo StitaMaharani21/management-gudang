@@ -38,4 +38,23 @@ class AuthService
     {
         return $photo->store('users', 'public');
     }
+
+    protected function normalizePhotoUrl($photo)
+    {
+        if (empty($photo)) {
+            return null;
+        }
+
+        // If already full URL (http / https), return as is
+        if (is_string($photo) && str_starts_with($photo, 'http')) {
+            return $photo;
+        }
+
+        // If stored path like "categories/xxx.jpg"
+        if (is_string($photo)) {
+            return config('app.url') . '/storage/' . ltrim($photo, '/');
+        }
+
+        return null;
+    }
 }
