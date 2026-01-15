@@ -1,7 +1,7 @@
 # 📦 Management Gudang
 
 <p>
-  <img src="https://drive.google.com/uc?export=view&id=1xz93m-sHp1rIgEWAe7oHljQJeI_YY0vq" width="600" alt="Management Gudang Banner"/>
+  <img src="https://drive.google.com/uc?export=view&id=1Uvf_JTtSXY6qTxAvXbjVVctzBv1lyION" width="600" alt="Management Gudang Banner"/>
 </p>
 
 Aplikasi **Warehouse Management System** berbasis **Laravel 12 (Backend API)** dan **React.js (Frontend)** untuk mengelola data gudang, produk, merchant, dan transaksi secara terintegrasi.
